@@ -1,2 +1,3 @@
-# fuel-plugin-eayuncenter
-Fuel plugin for EayunCenter deployment
+eayuncenter
+=================
+A fuel plugin to deploy EayunCenter.

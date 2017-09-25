@@ -1,0 +1,67 @@
+attributes:
+  mysql_db:
+    value: 'eayuncenter'
+    label: 'Mysql Database'
+    description: 'Database name for mysql.'
+    weight: 40
+    type: "text"
+  mysql_username:
+    value: 'mysqldb_user'
+    label: 'Mysql Username'
+    description: 'Username for mysql.'
+    weight: 40
+    type: "text"
+  mysql_password:
+    value: 'mysqldb_pwd'
+    label: 'Mysql Password'
+    description: 'Password for mysql.'
+    weight: 40
+    type: "password"
+  mongo_db:
+    value: 'eayuncenter'
+    label: 'Mongo Database'
+    description: 'Database for mongo.'
+    weight: 40
+    type: "text"
+  mongo_username:
+    value: 'mongodb_user'
+    label: 'Mongo Username'
+    description: 'Username for mongo.'
+    weight: 40
+    type: "text"
+  mongo_password:
+    value: 'mongodb_pwd'
+    label: 'Mongo Password'
+    description: 'Password for mongo.'
+    weight: 40
+    type: "password"
+  java_opts:
+    value: '-Xms1024m -Xmx4096m -XX:PermSize=128m -XX:MaxPermSize=512m'
+    label: 'Java opts'
+    description: 'Java vm opts.'
+    weight: 40
+    type: "text"
+  fuel_auth:
+    value: 'fuel_auth'
+    label: 'Fuel Auth'
+    description: 'Fuel Authentication Data.'
+    weight: 40
+    type: "text"
+  fuel_tenant_name:
+    value: 'admin'
+    label: 'Fuel Tenant Name'
+    description: 'Fuel Tenant Name.'
+    weight: 40
+    type: "text"
+  fuel_tenant_id:
+    value: 'xxxxx'
+    label: 'Fuel Tenant ID'
+    description: 'Fuel Tenant ID.'
+    weight: 40
+    type: "text"
+  datacenter_id:
+    value: 'xxxxx'
+    label: 'DataCenter ID'
+    description: 'UUID for DataCenter.'
+    weight: 40
+    type: "text"

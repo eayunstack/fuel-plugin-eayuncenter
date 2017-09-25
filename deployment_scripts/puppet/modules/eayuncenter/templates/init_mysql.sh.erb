@@ -1,0 +1,22 @@
+# if eayuncenter database is exist: exit 0
+mysql -uroot -e 'show databases' | grep -q "^<%= @mysql_db_name %>$"
+if [ $? == 0 ]; then
+    echo "Database: eayuncenter is existed, SKIP..."
+    exit 0
+fi
+
+# mysql_init_database.sql must set eayuncenter password
+# init database error: exit 1
+mysql -uroot < <%= @db_tmp_dir %>/mysql_init_database.sql
+if [ $? != 0 ]; then
+    echo "Init database <%= @mysql_db_name %> ERROR"
+    exit 1
+fi
+
+# init dc_datacenter error: exit 2
+mysql -uroot < <%= @db_tmp_dir %>/mysql_init_datacenter.sql
+
+if [ $? != 0 ]; then
+    echo "Init table dc_dataceter ERROR"
+    exit 2
+fi
