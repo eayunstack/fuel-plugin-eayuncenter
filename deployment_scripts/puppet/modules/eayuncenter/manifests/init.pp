@@ -146,6 +146,7 @@ class eayuncenter
     refreshonly => true,
     require     => [
       Service['docker'],
+      File['eayuncenter_config_file'],
       Exec['waiting_for_mysql_db_init_complate'],
     ],
   }
@@ -153,6 +154,7 @@ class eayuncenter
   exec { 'restart_eayuncenter_container':
     path        => '/usr/bin',
     command     => "docker restart ${docker_container_name}",
+    onlyif      => "docker ps -a | grep -q ${docker_container_name}",
     require     => [
       Service['docker'],
     ],
