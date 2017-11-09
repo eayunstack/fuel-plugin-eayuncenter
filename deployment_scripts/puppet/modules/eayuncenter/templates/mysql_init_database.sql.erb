@@ -1,0 +1,4 @@
+create database <%= @mysql_db_name %>;
+create user '<%= @mysql_username %>'@'%' identified by '<%= @mysql_password %>';
+grant select on *.* to '<%= @mysql_username %>'@'%';
+grant all on <%= @mysql_db_name %>.* to '<%= @mysql_username %>'@'%';

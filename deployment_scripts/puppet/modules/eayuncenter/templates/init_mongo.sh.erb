@@ -1,0 +1,5 @@
+# ERROR: exit code 3
+mongo -uadmin <%= @primary_mongo_ip %>:27017/admin -p<%= @mongo_db_password %> < <%= @db_tmp_dir %>/mongo_create_log_index.js
+if [ $? != 0 ]; then
+    exit 3
+fi

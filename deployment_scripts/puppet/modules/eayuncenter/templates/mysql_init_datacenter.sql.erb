@@ -1,0 +1,57 @@
+USE `<%= @mysql_db_name %>`;
+
+DROP TABLE IF EXISTS `dc_datacenter`;
+
+CREATE TABLE `dc_datacenter`(
+ `id` VARCHAR(50) NOT NULL,
+ `dc_type` VARCHAR(30) DEFAULT 'openstack' COMMENT '虚拟化平台类型',
+ `dc_address` VARCHAR(50) DEFAULT NULL COMMENT 'OpenStack 环境地址',
+ `v_center_username` VARCHAR(50) DEFAULT NULL COMMENT 'admin name',
+ `v_center_password` VARCHAR(50) DEFAULT NULL COMMENT 'admin password',
+ `os_admin_project_name` VARCHAR(50) DEFAULT NULL COMMENT 'tenant name',
+ `os_admin_project_id` VARCHAR(50) DEFAULT NULL COMMENT 'tenant id',
+ `create_date` DATETIME DEFAULT NULL COMMENT '创建时间',
+ `os_keystone_region` VARCHAR(30) DEFAULT NULL COMMENT 'keystone region',
+ `os_common_region` VARCHAR(30) DEFAULT NULL COMMENT 'common region',
+ `common_region_url_type` VARCHAR(30) DEFAULT NULL COMMENT 'common region URL 类型',
+ `dc_dns` VARCHAR(50) DEFAULT '114.114.114.114' COMMENT '子网默认 DNS',
+ `cpu_allocation_ratio` DECIMAL(6, 3) DEFAULT 8.0 COMMENT 'CPU超配比',
+ `disk_allocation_ratio` DECIMAL(6, 3) DEFAULT 1.0 COMMENT '磁盘超配比',
+ `ram_allocation_ratio` DECIMAL(6, 3) DEFAULT 1.0 COMMENT '内存超配比',
+ `ec_managenode_outnetip` VARCHAR(50) DEFAULT NULL COMMENT 'fuel 环境地址',
+ `ec_managenode_auth` VARCHAR(50) DEFAULT NULL COMMENT 'fuel 环境用户名+密码，格式：用户名,密码',
+ `fuel_admin_project_name` VARCHAR(50) DEFAULT NULL COMMENT 'fuel tenant name',
+ `fuel_admin_project_id` VARCHAR(50) DEFAULT NULL COMMENT 'fuel tenant ID',
+ `access_key` VARCHAR(100) DEFAULT NULL COMMENT 'AK',
+ `secret_key` VARCHAR(100) DEFAULT NULL COMMENT 'SK',
+ PRIMARY KEY (`id`),
+ KEY `idx_datacenterId` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO dc_datacenter(
+  `id`, `dc_address`,
+  `v_center_username`,
+  `v_center_password`,
+  `os_admin_project_name`,
+  `os_admin_project_id`,
+  `create_date`,
+  `os_keystone_region`,
+  `os_common_region`,
+  `ec_managenode_outnetip`,
+  `ec_managenode_auth`,
+  `fuel_admin_project_name`,
+  `fuel_admin_project_id`)
+  values(
+  '<%= @datacenter_id %>', 
+  '<%= @management_vip %>',
+  '<%= @keystone_admin_name %>',
+  '<%= @keystone_admin_password %>',
+  '<%= @keystone_tenant_name %>',
+  '<%= @keystone_tenant_id %>',
+  now(),
+  'RegionOne',
+  'RegionOne',
+  '<%= @fuel_ip %>',
+  '<%= @fuel_auth %>',
+  '<%= @fuel_tenant_name %>',
+  '<%= @fuel_tenant_id %>')
