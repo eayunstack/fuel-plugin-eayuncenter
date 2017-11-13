@@ -72,11 +72,6 @@ class eayuncenter
 
   }
 
-  package {'eayuncenter-docker-image':
-    ensure => latest,
-    notify => Exec['remove_old_eayuncenter_container'],
-  }
-
   service { 'docker':
     ensure => running,
     enable => true,
@@ -109,24 +104,33 @@ class eayuncenter
     'DEFAULT/JAVA_OPTS':   value => $java_opts;
   }
 
+  package { 'eayuncenter-docker-image':
+    ensure => latest,
+    notify => [
+      Exec['remove_old_eayuncenter_container'],
+      Exec['remove_old_eayuncenter_image'],
+      Exec['load_new_eayuncenter_image'],
+      Exec['start_new_eayuncenter_container'],
+    ],
+  }
+
   exec { 'remove_old_eayuncenter_container':
     path        => '/usr/bin',
     command     => "docker rm -f ${docker_container_name}",
     onlyif      => "docker ps -a | grep -q ${docker_container_name}",
     refreshonly => true,
     require     => Service['docker'],
-    notify      => Exec['remove_old_eayuncenter_image'],
   }
 
   exec { 'remove_old_eayuncenter_image':
     path        => '/usr/bin',
     command     => "docker rmi -f ${docker_image_name}:${docker_image_version}",
     onlyif      => "docker images | grep -q ${docker_image_name}",
+    refreshonly => true,
     require     => [
       Service['docker'],
+      Exec['remove_old_eayuncenter_container'],
     ],
-    refreshonly => true,
-    notify      => Exec['load_new_eayuncenter_image'],
   }
 
   exec { 'load_new_eayuncenter_image':
@@ -136,6 +140,7 @@ class eayuncenter
     refreshonly => true,
     require     => [
       Service['docker'],
+      Exec['remove_old_eayuncenter_image'],
     ],
     notify      => Exec['start_new_eayuncenter_container'],
   }
@@ -143,22 +148,15 @@ class eayuncenter
   exec { 'start_new_eayuncenter_container':
     path        => '/usr/bin',
     command     => "docker run -d -p 80:8080 --restart=\"always\" --env-file /etc/eayuncenter/eayuncenter.conf --name ${docker_container_name} ${docker_image_name}:${docker_image_version}",
+    onlyif      => "docker images | grep -q ${docker_image_name}",
     refreshonly => true,
     require     => [
       Service['docker'],
       File['eayuncenter_config_file'],
       Exec['waiting_for_mysql_db_init_complate'],
+      Exec['remove_old_eayuncenter_container'],
+      Exec['load_new_eayuncenter_image'],
     ],
-  }
-
-  exec { 'restart_eayuncenter_container':
-    path        => '/usr/bin',
-    command     => "docker restart ${docker_container_name}",
-    onlyif      => "docker ps -a | grep -q ${docker_container_name}",
-    require     => [
-      Service['docker'],
-    ],
-    refreshonly => true,
   }
 
   exec { 'waiting_for_mysql_db_init_complate':
@@ -169,9 +167,10 @@ class eayuncenter
     timeout   => 600,
   }
 
-  File['eayuncenter_config_file'] -> Eayuncenter_config<||>
+  File['eayuncenter_config_file'] -> Eayuncenter_config<||> -> Package['eayuncenter-docker-image']
 
-  Eayuncenter_config<||> ~> Exec['restart_eayuncenter_container']
+  Eayuncenter_config<||> ~> Exec['remove_old_eayuncenter_container']
+  Eayuncenter_config<||> ~> Exec['start_new_eayuncenter_container']
 
   if $ha_mode {
     package{ 'haproxy':
