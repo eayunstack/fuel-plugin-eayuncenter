@@ -72,6 +72,11 @@ class eayuncenter
 
   }
 
+  package { 'docker':
+    ensure => latest,
+    before => Service['docker'],
+  }
+
   service { 'docker':
     ensure => running,
     enable => true,
