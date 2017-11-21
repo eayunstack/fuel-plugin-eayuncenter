@@ -74,7 +74,30 @@ class eayuncenter
 
   package { 'docker':
     ensure => latest,
+    before => [
+      File['eayunstack_systemd_docker'],
+      Service['docker'],
+    ],
+  }
+
+  file { 'docker_service_dir':
+    ensure => directory,
+    path   => '/etc/systemd/system/docker.service.d/',
+    before => File['eayunstack_systemd_docker'],
+  }
+
+  file { 'eayunstack_systemd_docker':
+    path   => '/etc/systemd/system/docker.service.d/eayunstack.conf',
+    source => 'puppet:///modules/eayuncenter/eayunstack_systemd_docker.conf',
     before => Service['docker'],
+    notify => Exec['reload_docker_service_file'],
+  }
+
+  exec { 'reload_docker_service_file':
+    path        => '/usr/bin',
+    command     => 'systemctl daemon-reload',
+    refreshonly => true,
+    before      => Service['docker'],
   }
 
   service { 'docker':
