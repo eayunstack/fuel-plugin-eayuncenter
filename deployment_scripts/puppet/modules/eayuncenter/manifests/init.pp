@@ -1,6 +1,7 @@
 class eayuncenter
 {
   # for /etc/eayuncenter/eayuncenter.conf
+  $nodes_hash         = $::fuel_settings['nodes']
   $mysql_db_name      = $::fuel_settings['eayuncenter']['mysql_db']
   $mysql_username     = $::fuel_settings['eayuncenter']['mysql_username']
   $mysql_password     = $::fuel_settings['eayuncenter']['mysql_password']
@@ -8,7 +9,7 @@ class eayuncenter
   $mongo_db_name      = $::fuel_settings['eayuncenter']['mongo_db']
   $mongo_username     = $::fuel_settings['eayuncenter']['mongo_username']
   $mongo_password     = $::fuel_settings['eayuncenter']['mongo_password']
-  $mongo_url          = "${::fuel_settings['management_vip']}:27017"
+  $mongo_url          = eayuncenter_mongo_url($nodes_hash)
   $ceilometer_db_name = "ceilometer"
   $ceilometer_db_user = "ceilometer"
   $ceilometer_db_pwd  = $::fuel_settings['ceilometer']['db_password']
@@ -219,7 +220,6 @@ class eayuncenter
       require => Package['haproxy'],
     }
 
-    $nodes_hash = $::fuel_settings['nodes']
     $primary_controller_nodes = filter_nodes($nodes_hash, 'role', 'primary-controller')
     $controllers = concat($primary_controller_nodes, filter_nodes($nodes_hash, 'role', 'controller'))
 
