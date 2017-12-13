@@ -18,6 +18,25 @@ class eayuncenter::db_init_mysql (
   $fuel_tenant_name = $::fuel_settings['eayuncenter']['fuel_tenant_name']
   $fuel_tenant_id   = $::fuel_settings['eayuncenter']['fuel_tenant_id']
 
+  $multi_extnet_enabled = $::fuel_settings['neutron-ext-net']['metadata']['enabled']
+  if $multi_extnet_enabled {
+    $multi_extnet = 1
+  } else {
+    $multi_extnet = 0
+  }
+  $multi_extnet_vlan_min = $::fuel_settings['neutron-ext-net']['ext_vlan_min']
+  $multi_extnet_vlan_max = $::fuel_settings['neutron-ext-net']['ext_vlan_max']
+  $multi_extnet_vlan_range = "$multi_extnet_vlan_min:$multi_extnet_vlan_max"
+
+  $segmentation_type = $::fuel_settings['quantum_settings']['L2']['segmentation_type']
+  if $segmentation_type == 'gre' {
+    $tenant_net_type = '1'
+    $tenant_net_id_range = $::fuel_settings['quantum_settings']['L2']['tunnel_id_ranges']
+  } else {
+    $tenant_net_type = '0'
+    $tenant_net_id_range = $::fuel_settings['quantum_settings']['L2']['phys_nets']['physnet2']['vlan_range']
+  }
+
   file { "${db_tmp_dir}/mysql_init_database.sql":
     ensure  => present,
     owner   => 'root',
