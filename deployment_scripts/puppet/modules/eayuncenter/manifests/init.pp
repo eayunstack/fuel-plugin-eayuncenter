@@ -13,6 +13,7 @@ class eayuncenter
   $ceilometer_db_user = "ceilometer"
   $ceilometer_db_pwd  = $::fuel_settings['ceilometer']['db_password']
   $java_opts          = $::fuel_settings['eayuncenter']['java_opts']
+  $logback_method     = "FILE"
 
   # for docker
   $docker_image_name     = "eayuncenter"
@@ -118,18 +119,19 @@ class eayuncenter
   }
 
   eayuncenter_config {
-    'DEFAULT/mysql_url':   value => $mysql_url;
-    'DEFAULT/mysql_user':  value => $mysql_username;
-    'DEFAULT/mysql_pass':  value => $mysql_password;
-    'DEFAULT/mongo_url':   value => $mongo_url;
-    'DEFAULT/mongo_db':    value => $mongo_db_name;
-    'DEFAULT/mongo_user':  value => $mongo_username;
-    'DEFAULT/mongo_pass':  value => $mongo_password;
-    'DEFAULT/mongo2_url':  value => $mongo_url;
-    'DEFAULT/mongo2_db':   value => $ceilometer_db_name;
-    'DEFAULT/mongo2_user': value => $ceilometer_db_user;
-    'DEFAULT/mongo2_pass': value => $ceilometer_db_pwd;
-    'DEFAULT/JAVA_OPTS':   value => $java_opts;
+    'DEFAULT/mysql_url':      value => $mysql_url;
+    'DEFAULT/mysql_user':     value => $mysql_username;
+    'DEFAULT/mysql_pass':     value => $mysql_password;
+    'DEFAULT/mongo_url':      value => $mongo_url;
+    'DEFAULT/mongo_db':       value => $mongo_db_name;
+    'DEFAULT/mongo_user':     value => $mongo_username;
+    'DEFAULT/mongo_pass':     value => $mongo_password;
+    'DEFAULT/mongo2_url':     value => $mongo_url;
+    'DEFAULT/mongo2_db':      value => $ceilometer_db_name;
+    'DEFAULT/mongo2_user':    value => $ceilometer_db_user;
+    'DEFAULT/mongo2_pass':    value => $ceilometer_db_pwd;
+    'DEFAULT/JAVA_OPTS':      value => $java_opts;
+    'DEFAULT/LOGBACK_METHOD': value => $logback_method;
   }
 
   package { 'eayuncenter-docker-image':
