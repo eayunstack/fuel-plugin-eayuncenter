@@ -1,0 +1,10 @@
+use <%= @mongo_db_name %>;
+db.createUser({user:<%= @mongo_db_user %>,pwd:<%= @mongo_db_password %>,roles:[{role:"dbOwner", db:<%= @mongo_db_name %>}]});
+db.log.eayuncenter.createIndex(
+		  {"timestamp": 1},
+		    {expireAfterSeconds: 7776000}
+		);
+db.label.unbindfloat.eayuncenter.createIndex(
+		  {"createtime": 1},
+		    {expireAfterSeconds: 3600}
+		);
