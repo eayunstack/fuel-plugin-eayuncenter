@@ -36,7 +36,7 @@ attributes:
     weight: 40
     type: "password"
   java_opts:
-    value: '-Xms1024m -Xmx4096m -XX:PermSize=128m -XX:MaxPermSize=512m'
+    value: '-Djava.awt.headless=true  -XX:+UseG1GC -Dfile.encoding=UTF-8 -Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=512m'
     label: 'Java opts'
     description: 'Java vm opts.'
     weight: 40

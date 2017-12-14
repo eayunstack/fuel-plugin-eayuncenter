@@ -7,14 +7,14 @@ fi
 
 # mysql_init_database.sql must set eayuncenter password
 # init database error: exit 1
-mysql -uroot < <%= @db_tmp_dir %>/mysql_init_database.sql
+mysql --default-character-set=utf8 -uroot < <%= @db_tmp_dir %>/mysql_init_database.sql
 if [ $? != 0 ]; then
     echo "Init database <%= @mysql_db_name %> ERROR"
     exit 1
 fi
 
 # init dc_datacenter error: exit 2
-mysql -uroot < <%= @db_tmp_dir %>/mysql_init_datacenter.sql
+mysql --default-character-set=utf8 -uroot < <%= @db_tmp_dir %>/mysql_init_datacenter.sql
 
 if [ $? != 0 ]; then
     echo "Init table dc_dataceter ERROR"

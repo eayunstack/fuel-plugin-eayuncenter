@@ -1,6 +1,7 @@
 class eayuncenter::db_init_mongo (
   $primary_mongo_ip,
   $mongo_db_name,
+  $mongo_db_user,
   $mongo_db_password,
   $db_tmp_dir,
 ) {
@@ -10,12 +11,12 @@ class eayuncenter::db_init_mongo (
     ensure => latest,
   }
 
-  file { "${db_tmp_dir}/mongo_create_log_index.js":
+  file { "${db_tmp_dir}/mongo_create_index.js":
     ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0640',
-    content => template('eayuncenter/mongo_create_log_index.js.erb'),
+    content => template('eayuncenter/mongo_create_index.js.erb'),
   }
 
   file { "${db_tmp_dir}/init_mongo.sh":
@@ -33,7 +34,7 @@ class eayuncenter::db_init_mongo (
     provider => shell,
     require  => [
       Package['mongodb'],
-      File["${db_tmp_dir}/mongo_create_log_index.js", "${db_tmp_dir}/init_mongo.sh"],
+      File["${db_tmp_dir}/mongo_create_index.js", "${db_tmp_dir}/init_mongo.sh"],
     ],          
   }
 

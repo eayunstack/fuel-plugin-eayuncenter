@@ -1,5 +1,6 @@
 USE `<%= @mysql_db_name %>`;
 
+/* -- 仅用于字段说明，表在另外脚本里已创建
 DROP TABLE IF EXISTS `dc_datacenter`;
 
 CREATE TABLE `dc_datacenter`(
@@ -24,9 +25,15 @@ CREATE TABLE `dc_datacenter`(
  `fuel_admin_project_id` VARCHAR(50) DEFAULT NULL COMMENT 'fuel tenant ID',
  `access_key` VARCHAR(100) DEFAULT NULL COMMENT 'AK',
  `secret_key` VARCHAR(100) DEFAULT NULL COMMENT 'SK',
+ `multi_extnet` CHAR(1) DEFAULT NULL COMMENT '0: Single exteral net; 1: Multi exteral net',
+ `vlan_range` VARCHAR(20) DEFAULT NULL COMMENT 'The range of vlan id',
+ `is_init_switch_vlan` CHAR(1) DEFAULT '0' COMMENT '0: no; 1: yes',
+ `switch_vlan_type`	CHAR(1) DEFAULT NULL COMMENT 'The segmentation type of switch vlan',
+ `switch_vlan_range` VARCHAR(20) DEFAULT NULL COMMENT 'The range of switch vlan id',
  PRIMARY KEY (`id`),
  KEY `idx_datacenterId` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
 
 INSERT INTO dc_datacenter(
   `id`, `dc_address`,
@@ -40,7 +47,11 @@ INSERT INTO dc_datacenter(
   `ec_managenode_outnetip`,
   `ec_managenode_auth`,
   `fuel_admin_project_name`,
-  `fuel_admin_project_id`)
+  `fuel_admin_project_id`,
+  `multi_extnet`,
+  `vlan_range`,
+  `switch_vlan_type`,
+  `switch_vlan_range`)
   values(
   '<%= @datacenter_id %>', 
   '<%= @management_vip %>',
@@ -54,4 +65,8 @@ INSERT INTO dc_datacenter(
   '<%= @fuel_ip %>',
   '<%= @fuel_auth %>',
   '<%= @fuel_tenant_name %>',
-  '<%= @fuel_tenant_id %>')
+  '<%= @fuel_tenant_id %>',
+  '<%= @multi_extnet %>',
+  '<%= @multi_extnet_vlan_range %>',
+  '<%= @tenant_net_type %>',
+  '<%= @tenant_net_id_range %>')
